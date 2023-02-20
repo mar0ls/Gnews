@@ -1,0 +1,2 @@
+# Gnews
+scraper google news
