@@ -1,7 +1,7 @@
 from pygooglenews import GoogleNews
 import pandas as pd
 from textblob import TextBlob
-
+import time
 
 def get_titles(keyword):
     news= []
@@ -15,8 +15,8 @@ def get_titles(keyword):
     return news
 
 def sentiment(text):
-  blob=TextBlob(text)
-  return blob.sentiment.polarity
+    blob=TextBlob(text)
+    return blob.sentiment.polarity
 
 def translation(text):
     blob = TextBlob(text)
@@ -47,31 +47,33 @@ def catcher():
         lang1 == 'pl'
     lang = lang1.strip("./!@#$%^&*()_+=,./<>?:{}[]';01234567890")
     global country
-    country1 = ((str(input("Enter the country of the article "))).upper())
+    country1 = ((str(input("Enter the region of the article: "))).upper())
     country = country1.strip("./!@#$%^&*()_+=,./<>?:{}[]';01234567890")
     data = get_titles(q)
+    global timer
+    timer = time.strftime("%Y%m%d-%H%M%S")
     if lang == 'pl':
         df = pd.DataFrame(data)
         df['sentiment'] = df['title'].apply(sentiment)
         df['Date'] = pd.to_datetime(df['published'])
         df['Date'] = df['Date'].dt.date
         df = df.sort_values(by='Date', ascending=False)
-        df.to_csv(f'output_file_{q}.csv')
+        df.to_csv(f'output_file_{timer}.csv')
     else:
         df = pd.DataFrame(data)
         df['translation'] = df['title'].apply(translation)
-        df['sentiment'] = df['translation'].apply(sentiment)
+        df['sentiment'] = df['title'].apply(sentiment)
         df['Date'] = pd.to_datetime(df['published'])
         df['Date'] = df['Date'].dt.date
         df = df.sort_values(by='Date', ascending=False)
-        df.to_csv(f'output_file_{q}.csv')
+        df.to_csv(f'output_file_{timer}.csv')
 
 def main():
     banner()
     while True:
         try:
             catcher()
-            print(f"-- Process end .. You should open 'output_{q}.csv' file -- ")
+            print(f"-- Process end .. You should open 'output_{timer}.csv' file -- ")
             break
         except (ValueError, KeyError, KeyboardInterrupt, EnvironmentError, IOError, LookupError):
             print("Something wrong, try again ...")
