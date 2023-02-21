@@ -3,7 +3,7 @@
 </div>
 
 # Gnews
-Google News scraper with use pygoogle library, which acts as a wrapper library for the Google RSS feed. 
+Google News scraper with use pygooglenews library, which acts as a wrapper library for the Google RSS feed. 
 
 
 # Installation
